@@ -3,11 +3,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
 
 on:
-  workflow_call:
-    inputs:
-      deploy_env:
-        description: enviornment name
-        type: string
+  # workflow_call:
+  #   inputs:
+  #     deploy_env:
+  #       description: enviornment name
+  #       type: string
   workflow_dispatch:
     inputs:
       deploy_env:
