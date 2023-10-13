@@ -23,7 +23,7 @@ jobs:
             
   Sync_bucket:
     name: Sync_bucket
-    runs-on: [linux]
+    runs-on: ubuntu-latest
     environment: "${{ inputs.deploy_env }}"
     steps:
       - name: Checkout
@@ -34,7 +34,7 @@ jobs:
 
   pushed-cfn:
     name: Pushed cloudformation
-    runs-on: [linux]
+    runs-on: ubuntu-latest
     needs: Sync_bucket
     steps:
       - name: Response from push cloudformation pipeline
