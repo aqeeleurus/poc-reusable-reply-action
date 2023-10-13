@@ -1,0 +1,52 @@
+name: cloudformation push pipeline
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+
+on:
+  workflow_call:
+    inputs:
+      deploy_env:
+        description: enviornment name
+        type: string
+  repository_dispatch:
+    inputs:
+      deploy_env:
+        description: enviornment name
+        type: string
+  workflow_dispatch:
+    inputs:
+      deploy_env:
+        description: enviornment name
+        type: environment
+
+jobs:
+            
+  Sync_bucket:
+    name: Sync_bucket
+    runs-on: [linux]
+    environment: "${{ inputs.deploy_env }}"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: |
+          echo "sync bucket job"
+        shell: bash
+
+  pushed-cfn:
+    name: Pushed cloudformation
+    runs-on: [linux]
+    needs: Sync_bucket
+    steps:
+      - name: Response from push cloudformation pipeline
+        id: pushed-cfn
+        env:
+            ENV_NAME: ${{ inputs.deploy_env }}
+        run: |
+          curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.ACTION_SECRET }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/aqeel-eurus/poc-caller-curl-action/dispatches \
+          -d '{"event_type":"response"}, "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+        shell: bash
