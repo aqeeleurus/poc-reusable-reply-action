@@ -17,7 +17,7 @@ on:
     inputs:
       deploy_env:
         description: enviornment name
-        type: environment
+        type: string #environment
 
 jobs:
             
